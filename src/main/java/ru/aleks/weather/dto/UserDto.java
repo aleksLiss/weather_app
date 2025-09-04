@@ -5,6 +5,9 @@ public class UserDto {
     private String password;
     private String repeatPassword;
 
+    public UserDto() {
+    }
+
     public UserDto(String username, String password, String repeatPassword) {
         this.username = username;
         this.password = password;
@@ -21,5 +24,17 @@ public class UserDto {
 
     public String getRepeatPassword() {
         return repeatPassword;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setRepeatPassword(String repeatPassword) {
+        this.repeatPassword = repeatPassword;
     }
 }
