@@ -1,5 +1,6 @@
 package ru.aleks.weather.model;
 
+import javax.persistence.*;
 import java.util.Objects;
 
 public class User {
@@ -11,7 +12,7 @@ public class User {
     public User() {
     }
 
-    public User(int id, String login, String password) {
+    public User(String login, String password) {
         this.id = id;
         this.login = login;
         this.password = password;
