@@ -1,5 +1,6 @@
 package ru.aleks.weather.mapper;
 
+import org.springframework.stereotype.Component;
 import ru.aleks.weather.model.User;
 
 import org.springframework.jdbc.core.RowMapper;
@@ -7,6 +8,7 @@ import org.springframework.jdbc.core.RowMapper;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+@Component
 public class UserMapper implements RowMapper<User> {
 
     @Override
