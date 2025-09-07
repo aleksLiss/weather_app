@@ -1,14 +1,14 @@
 package ru.aleks.weather.dto;
 
-public class UserDto {
+public class SaveUserDto {
     private String username;
     private String password;
     private String repeatPassword;
 
-    public UserDto() {
+    public SaveUserDto() {
     }
 
-    public UserDto(String username, String password, String repeatPassword) {
+    public SaveUserDto(String username, String password, String repeatPassword) {
         this.username = username;
         this.password = password;
         this.repeatPassword = repeatPassword;
