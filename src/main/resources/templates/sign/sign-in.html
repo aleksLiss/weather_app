@@ -19,14 +19,14 @@
 
     <div class="row justify-content-center">
         <div class="col-12 col-lg-4 col-md-6 col-sm-12">
-            <form th:action="@{/user/in}" th:object="${user}" class="mt-4" method="post">
+            <form th:action="@{/user/in}" class="mt-4" method="post">
                 <div class="mb-3">
                     <label for="login" class="form-label">Username</label>
-                    <input type="text" class="form-control" id="login" th:field="*{login}" required value=""/>
+                    <input type="text" class="form-control" id="login" required value=""/>
                 </div>
                 <div class="mb-3">
                     <label for="password" class="form-label">Password</label>
-                    <input type="password" class="form-control" id="password" th:field="*{password}" required value=""/>
+                    <input type="password" class="form-control" id="password" required value=""/>
                 </div>
 
                 <input type="hidden" name="redirect_to" value="http://localhost/"/>

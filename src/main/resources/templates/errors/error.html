@@ -1,6 +1,5 @@
-
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Weather Viewer - Error</title>
@@ -11,9 +10,8 @@
 
 <div class="container text-center mt-5">
     <h1 class="display-4">Oops! Something Went Wrong</h1>
-    <p class="lead">We're sorry, but an unexpected error has occurred. Please try again later.</p>
-    <a class="btn btn-primary" href="#">Go to Home</a>
+    <p class="lead" th:text="${message}"></p>
+    <p class="mt-2 text-center">Don't have an account? <a href="/user/up">Sign up here</a></p>
 </div>
-
 </body>
 </html>
