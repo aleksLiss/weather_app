@@ -33,4 +33,8 @@ public class UserService {
         }
         return savedUser;
     }
+
+    public Optional<User> getUserByLogin(String login) {
+        return userRepository.getByLogin(login);
+    }
 }
