@@ -50,7 +50,8 @@ public class UserController {
     }
 
     @GetMapping("/user/in")
-    public String getSingInPage() {
+    public String getSingInPage(Model model) {
+        model.addAttribute("user", new User());
         return "sign/sign-in";
     }
 
@@ -84,8 +85,7 @@ public class UserController {
                     session.setUserId(user.getId());
                     session.setExpiresAt(LocalDateTime.now());
                     sessionService.save(session);
-                }
-                ;
+                };
             }
             model.addAttribute("user", user.getLogin());
             return "index";
