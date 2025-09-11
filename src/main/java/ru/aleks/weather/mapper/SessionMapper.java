@@ -15,13 +15,9 @@ public class SessionMapper implements RowMapper<Session> {
     @Override
     public Session mapRow(ResultSet rs, int rowNum) throws SQLException {
         Session session = new Session();
-        session.setId(UUID.fromString(String.valueOf(rs.getInt("id"))));
+        session.setId(UUID.fromString(rs.getString("id")));
         session.setUserId(rs.getInt("user_id"));
-        session.setExpiresAt(
-                LocalDateTime.ofInstant(
-                        rs.getDate("expires_at").toInstant(),
-                        ZoneId.systemDefault())
-        );
+        session.setExpiresAt(rs.getObject("expires_at", LocalDateTime.class));
         return session;
     }
 }
