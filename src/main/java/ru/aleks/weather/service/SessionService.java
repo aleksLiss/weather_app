@@ -14,7 +14,6 @@ import java.util.UUID;
 public class SessionService {
 
     private final SessionRepository sessionRepository;
-    private static final Logger LOGGER = LoggerFactory.getLogger(SessionService.class);
 
     @Autowired
     public SessionService(SessionRepository sessionRepository) {
