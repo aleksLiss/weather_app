@@ -1,5 +1,10 @@
 package ru.aleks.weather.controller;
 
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -7,9 +12,27 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class IndexController {
 
+    private static final String NAMESESSION = "WEATHERAPPSESSIONID";
+    private static final Logger LOGGER = LoggerFactory.getLogger(IndexController.class);
+    /*
+        Если у вас используется cookie + сервис сессий,
+        то нужно достать сессию из cookie и найти связаного пользователя — аналогично тому,
+        как у вас это реализовано в UserController.
+         */
     @GetMapping("/")
-    public String getIndex(Model model) {
-        model.addAttribute("user", "Гость");
+    public String getIndex(HttpServletRequest request, Model model) {
+        HttpSession session = request.getSession();
+        Cookie[] cookies = request.getCookies();
+        String foundUserName = null;
+        for (Cookie cookie : cookies) {
+            if (cookie.getName().equals("username")) {
+                LOGGER.info("IndexController: cookie value with name 'username': " + cookie.getValue());
+                foundUserName = cookie.getValue();
+            }
+        }
+        if (session.getAttribute("username") != null) {
+            model.addAttribute("username", foundUserName);
+        }
         return "index";
     }
 }
