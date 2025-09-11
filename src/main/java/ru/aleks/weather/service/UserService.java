@@ -37,8 +37,4 @@ public class UserService {
     public Optional<User> getUserByLogin(String login) {
         return userRepository.getByLogin(login);
     }
-
-    public int getUserIdByLogin(String login) {
-        return userRepository.getIdByUserLogin(login);
-    }
 }
