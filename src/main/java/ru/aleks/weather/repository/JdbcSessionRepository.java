@@ -3,11 +3,14 @@ package ru.aleks.weather.repository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import ru.aleks.weather.mapper.SessionMapper;
 import ru.aleks.weather.model.Session;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -34,12 +37,6 @@ public class JdbcSessionRepository implements SessionRepository {
                     session.getUserId(),
                     session.getExpiresAt()
             );
-            savedSession = Optional.ofNullable(
-                    jdbcTemplate.queryForObject(
-                            "SELECT * FROM sessions WHERE id = ?",
-                            new Object[]{session.getId()}, sessionMapper
-                    )
-            );
             LOGGER.info("SessionRepository: session was saved");
         } catch (Exception exception) {
             LOGGER.warn("SessionRepository: session was not saved");
@@ -56,11 +53,13 @@ public class JdbcSessionRepository implements SessionRepository {
                     jdbcTemplate.queryForObject(
                             sql,
                             new Object[]{sessionId},
-                            sessionMapper
-                    ));
+                            sessionMapper)
+            );
             LOGGER.info("SessionRepository: session was found");
+        } catch (EmptyResultDataAccessException e) {
+            LOGGER.info("SessionRepository: session not found for id {}", sessionId);
         } catch (Exception ex) {
-            LOGGER.warn("SessionRepository: session was not found");
+            LOGGER.error("Error fetching session", ex);
         }
         return foundSession;
     }
