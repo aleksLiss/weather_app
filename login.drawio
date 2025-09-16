@@ -1,0 +1,124 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36" version="28.0.7">
+  <diagram name="Страница — 1" id="VPcuTU1iEbOVmTfyuHuL">
+    <mxGraphModel dx="1226" dy="671" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="oPCBVb5Vz6nHvoKraSoB-1" value="req=&quot;/login&quot;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="10" y="60" width="90" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="oPCBVb5Vz6nHvoKraSoB-2" value="UserC" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="150" y="60" width="90" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="oPCBVb5Vz6nHvoKraSoB-4" value="authenticate ?" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="290" y="5" width="140" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="oPCBVb5Vz6nHvoKraSoB-6" value="return error&lt;br&gt;create new acc&lt;br&gt;redirect register" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="180" y="130" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="oPCBVb5Vz6nHvoKraSoB-7" value="find cookie with&lt;div&gt;&amp;nbsp;&quot;my_session_name&quot;&lt;/div&gt;" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="440" y="5" width="130" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="oPCBVb5Vz6nHvoKraSoB-8" value="not found cookie" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="580" y="10" width="120" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="oPCBVb5Vz6nHvoKraSoB-9" value="not found session" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="710" y="10" width="120" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="oPCBVb5Vz6nHvoKraSoB-10" value="getUserFromDB" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="370" y="160" width="104" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="oPCBVb5Vz6nHvoKraSoB-11" value="create new session" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="230" y="220" width="104" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="oPCBVb5Vz6nHvoKraSoB-12" value="save new session" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="110" y="300" width="104" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="oPCBVb5Vz6nHvoKraSoB-13" value="time session was ended" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="850" y="370" width="120" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="oPCBVb5Vz6nHvoKraSoB-14" value="found session" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="850" y="10" width="120" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="oPCBVb5Vz6nHvoKraSoB-15" value="get userId from found session and equal it with input username" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="815" y="140" width="190" height="180" as="geometry" />
+        </mxCell>
+        <mxCell id="oPCBVb5Vz6nHvoKraSoB-16" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1" target="oPCBVb5Vz6nHvoKraSoB-6">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="310" y="90" as="sourcePoint" />
+            <mxPoint x="250" y="220" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="oPCBVb5Vz6nHvoKraSoB-17" value="" style="endArrow=classic;html=1;rounded=0;entryX=0.654;entryY=0.015;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" target="oPCBVb5Vz6nHvoKraSoB-10">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="480" y="120" as="sourcePoint" />
+            <mxPoint x="450" y="170" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="470" y="130" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="oPCBVb5Vz6nHvoKraSoB-20" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="404" y="210" as="sourcePoint" />
+            <mxPoint x="334" y="250" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="oPCBVb5Vz6nHvoKraSoB-21" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.335;exitY=1.055;exitDx=0;exitDy=0;exitPerimeter=0;" edge="1" parent="1" source="oPCBVb5Vz6nHvoKraSoB-11">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="254" y="280" as="sourcePoint" />
+            <mxPoint x="214" y="320" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="oPCBVb5Vz6nHvoKraSoB-22" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="420" y="79.41" as="sourcePoint" />
+            <mxPoint x="450" y="79.41" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="oPCBVb5Vz6nHvoKraSoB-23" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="560" y="79.41" as="sourcePoint" />
+            <mxPoint x="590" y="79.41" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="oPCBVb5Vz6nHvoKraSoB-24" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="690" y="79.41" as="sourcePoint" />
+            <mxPoint x="720" y="79.41" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="oPCBVb5Vz6nHvoKraSoB-25" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="827" y="74.41" as="sourcePoint" />
+            <mxPoint x="857" y="74.41" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="oPCBVb5Vz6nHvoKraSoB-26" value="" style="endArrow=classic;html=1;rounded=0;entryX=0.607;entryY=0.115;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" target="oPCBVb5Vz6nHvoKraSoB-15">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="930" y="110" as="sourcePoint" />
+            <mxPoint x="930" y="150" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="oPCBVb5Vz6nHvoKraSoB-27" value="" style="endArrow=classic;html=1;rounded=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="1" source="oPCBVb5Vz6nHvoKraSoB-15" target="oPCBVb5Vz6nHvoKraSoB-13">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="900" y="340" as="sourcePoint" />
+            <mxPoint x="930" y="340" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="oPCBVb5Vz6nHvoKraSoB-28" value="" style="endArrow=classic;html=1;rounded=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" target="oPCBVb5Vz6nHvoKraSoB-2">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="100" y="74.41000000000003" as="sourcePoint" />
+            <mxPoint x="130" y="74.41000000000003" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="oPCBVb5Vz6nHvoKraSoB-29" value="" style="endArrow=classic;html=1;rounded=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" target="oPCBVb5Vz6nHvoKraSoB-4">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="240" y="74.41" as="sourcePoint" />
+            <mxPoint x="270" y="74.41" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
