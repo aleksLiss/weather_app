@@ -14,11 +14,7 @@ public class IndexController {
 
     private static final String NAMESESSION = "WEATHERAPPSESSIONID";
     private static final Logger LOGGER = LoggerFactory.getLogger(IndexController.class);
-    /*
-        Если у вас используется cookie + сервис сессий,
-        то нужно достать сессию из cookie и найти связаного пользователя — аналогично тому,
-        как у вас это реализовано в UserController.
-         */
+
     @GetMapping("/")
     public String getIndex(HttpServletRequest request, Model model) {
         HttpSession session = request.getSession();
@@ -30,7 +26,7 @@ public class IndexController {
                 foundUserName = cookie.getValue();
             }
         }
-        if (session.getAttribute("username") != null) {
+        if (foundUserName != null) {
             model.addAttribute("username", foundUserName);
         }
         return "index";
