@@ -77,7 +77,7 @@ public class UserController {
             response.addCookie(createdUserCookie.get());
             response.addCookie(createdSessionCookie.get());
             request.getSession().setAttribute("username", user.getLogin());
-            return "/";
+            return "redirect:/";
         }
         Optional<String> foundSessionId = getSessionIdFromCookie(foundCookie.get());
         if (foundSessionId.isEmpty()) {
@@ -92,7 +92,7 @@ public class UserController {
             response.addCookie(createdUserCookie.get());
             response.addCookie(createdSessionCookie.get());
             request.getSession().setAttribute("username", user.getLogin());
-            return "/";
+            return "redirect:/";
         }
         Optional<Session> foundSession = sessionService.getById(UUID.fromString(foundSessionId.get()));
         if (foundSession.isEmpty()) {
@@ -107,7 +107,7 @@ public class UserController {
             response.addCookie(createdUserCookie.get());
             response.addCookie(createdSessionCookie.get());
             request.getSession().setAttribute("username", user.getLogin());
-            return "/";
+            return "redirect:/";
         }
         LocalDateTime sessionTime = foundSession.get().getExpiresAt();
         LocalDateTime now = LocalDateTime.now();
@@ -126,7 +126,7 @@ public class UserController {
             return "redirect:/";
         }
         model.addAttribute("username", user.getLogin());
-        return "/";
+        return "redirect:/";
     }
     private Optional<Cookie> createNewCookieForUser(String login) {
         Cookie userCookie = new Cookie("username", userService.getUserByLogin(login).get().getLogin());
