@@ -3,6 +3,7 @@ package ru.aleks.weather.controller;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -58,14 +59,15 @@ public class UserController {
 
     @PostMapping("/login")
     public String signInUser(@ModelAttribute User user, Model model, HttpServletRequest request, HttpServletResponse response) {
-        Optional<User> foundUser = userService.getUserByLogin(user.getLogin());
-        if (foundUser.isEmpty()) {
+        Optional<User> foundUserFromInputField = userService.getUserByLogin(user.getLogin());
+        if (foundUserFromInputField.isEmpty()) {
             LOGGER.warn("UserController: user was not found");
             model.addAttribute("message", "User was not found");
             return "errors/error";
         }
         Optional<Cookie> foundCookie = getCookieFromRequest(request);
         if (foundCookie.isEmpty()) {
+            LOGGER.warn("UC: cookie was not found");
             Session session = new Session(
                     UUID.randomUUID(),
                     userService.getUserByLogin(user.getLogin()).get().getId(),
@@ -76,11 +78,11 @@ public class UserController {
             Optional<Cookie> createdUserCookie = createNewCookieForUser(user.getLogin());
             response.addCookie(createdUserCookie.get());
             response.addCookie(createdSessionCookie.get());
-            request.getSession().setAttribute("username", user.getLogin());
             return "redirect:/";
         }
         Optional<String> foundSessionId = getSessionIdFromCookie(foundCookie.get());
         if (foundSessionId.isEmpty()) {
+            LOGGER.warn("UC: session id was not found");
             Session session = new Session(
                     UUID.randomUUID(),
                     userService.getUserByLogin(user.getLogin()).get().getId(),
@@ -91,11 +93,24 @@ public class UserController {
             Optional<Cookie> createdUserCookie = createNewCookieForUser(user.getLogin());
             response.addCookie(createdUserCookie.get());
             response.addCookie(createdSessionCookie.get());
-            request.getSession().setAttribute("username", user.getLogin());
             return "redirect:/";
         }
         Optional<Session> foundSession = sessionService.getById(UUID.fromString(foundSessionId.get()));
         if (foundSession.isEmpty()) {
+            LOGGER.warn("UC: session was not found");
+            Optional<Session> createdSession = saveNewSession(foundSession.get().getUserId());
+            if (createdSession.isPresent()) {
+                sessionService.save(createdSession.get());
+                Optional<Cookie> createdSessionCookie = createNewCookieForSession(createdSession.get().getId());
+                Optional<Cookie> createdUserCookie = createNewCookieForUser(user.getLogin());
+                response.addCookie(createdUserCookie.get());
+                response.addCookie(createdSessionCookie.get());
+                return "redirect:/";
+            }
+        }
+        Optional<User> foundUserFromSession = userService.getUserByUserId(foundSession.get().getUserId());
+        if (!foundUserFromSession.get().getLogin().equals(foundUserFromInputField.get().getLogin())) {
+            sessionService.isDeleted(UUID.fromString(foundSessionId.get()));
             Session session = new Session(
                     UUID.randomUUID(),
                     userService.getUserByLogin(user.getLogin()).get().getId(),
@@ -106,28 +121,58 @@ public class UserController {
             Optional<Cookie> createdUserCookie = createNewCookieForUser(user.getLogin());
             response.addCookie(createdUserCookie.get());
             response.addCookie(createdSessionCookie.get());
-            request.getSession().setAttribute("username", user.getLogin());
             return "redirect:/";
         }
+        LOGGER.info("UC: user login from session {}", userService.getUserByUserId(foundSession.get().getUserId()).get().getLogin());
+        LOGGER.info("UC: user login from input {}", user.getLogin());
         LocalDateTime sessionTime = foundSession.get().getExpiresAt();
         LocalDateTime now = LocalDateTime.now();
-        if (Duration.between(sessionTime, now).toMillis() > 3600) {
-            Session session = new Session(
-                    UUID.randomUUID(),
-                    userService.getUserByLogin(user.getLogin()).get().getId(),
-                    LocalDateTime.now()
-            );
-            sessionService.save(session);
-            Optional<Cookie> createdSessionCookie = createNewCookieForSession(session.getId());
-            Optional<Cookie> createdUserCookie = createNewCookieForUser(user.getLogin());
-            response.addCookie(createdUserCookie.get());
-            response.addCookie(createdSessionCookie.get());
-            model.addAttribute("user", user.getLogin());
-            return "redirect:/";
+        if (Duration.between(sessionTime, now).toSeconds() > 3600) {
+            Optional<Session> createdSession = saveNewSession(foundSession.get().getUserId());
+            if (createdSession.isPresent()) {
+                sessionService.save(createdSession.get());
+                Optional<Cookie> createdSessionCookie = createNewCookieForSession(createdSession.get().getId());
+                Optional<Cookie> createdUserCookie = createNewCookieForUser(user.getLogin());
+                response.addCookie(createdUserCookie.get());
+                response.addCookie(createdSessionCookie.get());
+            }
         }
-        model.addAttribute("username", user.getLogin());
         return "redirect:/";
     }
+
+    @PostMapping("/logout")
+    public String signOutUser(HttpServletRequest request) {
+        try {
+            HttpSession session = request.getSession();
+            Optional<Cookie> foundCookie = getCookieFromRequest(request);
+            Optional<String> foundSessionId = getSessionIdFromCookie(foundCookie.get());
+            sessionService.isDeleted(UUID.fromString(foundSessionId.get()));
+            session.invalidate();
+            LOGGER.info("UserController: session was invalidated");
+        } catch (Exception exception) {
+            LOGGER.warn("UserController: session was not invalidated");
+        }
+        return "redirect:/login";
+    }
+    // create new method for delete session from sessionRepo
+    // create new Repo
+
+    private Optional<Session> saveNewSession(int userId) {
+        Optional<Session> newSession = Optional.empty();
+        try {
+            newSession = Optional.of(
+                    new Session(
+                            UUID.randomUUID(),
+                            userService.getUserByUserId(userId).get().getId(),
+                            LocalDateTime.now()
+                    )
+            );
+        } catch (Exception ex) {
+            LOGGER.warn("UserController: new session was not saved");
+        }
+        return newSession;
+    }
+
     private Optional<Cookie> createNewCookieForUser(String login) {
         Cookie userCookie = new Cookie("username", userService.getUserByLogin(login).get().getLogin());
         userCookie.setHttpOnly(true);
