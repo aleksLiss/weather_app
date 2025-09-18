@@ -37,6 +37,11 @@ public class JdbcSessionRepository implements SessionRepository {
                     session.getUserId(),
                     session.getExpiresAt()
             );
+            savedSession = Optional.ofNullable(
+                    jdbcTemplate
+                            .queryForObject(
+                                    "SELECT * FROM users WHERE LOGIN = ?", new Object[]{session.getId()}, sessionMapper
+                            ));
             LOGGER.info("SessionRepository: session was saved");
         } catch (Exception exception) {
             LOGGER.warn("SessionRepository: session was not saved");
