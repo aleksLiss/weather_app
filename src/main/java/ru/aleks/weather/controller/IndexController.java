@@ -28,7 +28,8 @@ public class IndexController {
         }
         if (foundUserName != null) {
             model.addAttribute("username", foundUserName);
+            return "index";
         }
-        return "index";
+        return "redirect:/user/up";
     }
 }
