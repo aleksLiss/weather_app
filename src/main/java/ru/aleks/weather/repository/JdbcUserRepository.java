@@ -67,7 +67,7 @@ public class JdbcUserRepository implements UserRepository {
         try {
             user = jdbcTemplate.queryForObject(sql, new Object[]{id}, userMapper);
         } catch (Exception ex) {
-            LOGGER.warn("UserRepository: Course with id: {} not found", id);
+            LOGGER.warn("UserRepository: User with id: {} not found", id);
         }
         return Optional.ofNullable(user);
     }
