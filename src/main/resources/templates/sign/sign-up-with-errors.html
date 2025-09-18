@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Weather Viewer – Sign Up</title>
@@ -28,10 +28,11 @@
     <div class="row justify-content-center">
         <div class="col-12 col-lg-4 col-md-6 col-sm-12">
             <form action="#" class="mt-4">
+<!--                th if username != null or password != null -->
                 <div class="mb-3">
                     <label for="username" class="form-label">Username</label>
                     <div class="input-group has-validation">
-                        <input type="text" class="form-control is-invalid" id="username" name="username" required value=""/>
+                        <input type="text" class="form-control is-invalid" th:text="${username}" id="username" name="username" required value=""/>
                         <div class="invalid-feedback">
                             Account with this email already exists.
                         </div>
@@ -40,7 +41,7 @@
                 <div class="mb-3">
                     <label for="password" class="form-label">Password</label>
                     <div class="input-group has-validation">
-                        <input type="password" class="form-control is-invalid" id="password" name="password" required value=""/>
+                        <input type="password" class="form-control is-invalid" th:text="${password}" id="password" name="password" required value=""/>
                         <div class="invalid-feedback">
                             Password must be at least 4 characters long.
                         </div>
