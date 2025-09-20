@@ -9,7 +9,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import ru.aleks.weather.check.CheckRegisterUser;
 import ru.aleks.weather.dto.SaveUserDto;
+import ru.aleks.weather.exception.IncorrectPasswordException;
+import ru.aleks.weather.exception.IncorrectUsernameException;
+import ru.aleks.weather.exception.UserAlreadyExistsException;
 import ru.aleks.weather.model.Session;
 import ru.aleks.weather.model.User;
 import ru.aleks.weather.service.SessionService;
@@ -22,15 +26,17 @@ import java.util.UUID;
 
 @Controller
 public class UserController {
-
+    // todo add common exception center
     private final UserService userService;
     private final SessionService sessionService;
+    private final CheckRegisterUser checkRegisterUser;
     private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
     private static final String NAMESESSION = "WEATHERAPPSESSIONID";
 
-    public UserController(UserService userService, SessionService sessionService) {
+    public UserController(UserService userService, SessionService sessionService, CheckRegisterUser checkRegisterUser) {
         this.userService = userService;
         this.sessionService = sessionService;
+        this.checkRegisterUser = checkRegisterUser;
     }
 
     @GetMapping("/user/up")
@@ -41,16 +47,29 @@ public class UserController {
 
     @PostMapping("/user/up")
     public String registerUser(@ModelAttribute SaveUserDto userDto, Model model) {
-        Optional<User> savedUser = userService.save(userDto);
-        // реализовать логику проверки логина пароля и выбрасывать определенное сообщение в форму
-        if (savedUser.isEmpty()) {
-            LOGGER.warn("UserController: error register new user");
-            model.addAttribute("username", "Error saved user");
+        Optional<User> savedUser;
+        try {
+            checkRegisterUser.checkRegister(userDto);
+        } catch (IncorrectUsernameException ex) {
+            LOGGER.warn("UserController: this username is invalid");
+            model.addAttribute("username", ex.getMessage());
+            return "sign/sign-up-with-errors";
+        } catch (IncorrectPasswordException ex) {
+            LOGGER.warn("UserController: this password is invalid");
+            model.addAttribute("password", ex.getMessage());
             return "sign/sign-up-with-errors";
         }
-
-        model.addAttribute("user", savedUser.get());
-        LOGGER.info("UserController: user was successfully registered");
+        try {
+            savedUser = userService.save(userDto);
+        } catch (UserAlreadyExistsException ex) {
+            LOGGER.warn("UserController: this username already exists");
+            model.addAttribute("username", "username already exists");
+            return "sign/sign-up-with-errors";
+        }
+        if (savedUser.isPresent()) {
+            model.addAttribute("user", savedUser.get());
+            LOGGER.info("UserController: user was successfully registered");
+        }
         return "sign/sign-in";
     }
 
