@@ -10,7 +10,9 @@ public class CommonUsernames {
     public static final List<String> COMMON_USERNAMES = List.of(
             "gay",
             "sex",
-            "gaysex"
+            "gaysex",
+            "gay-sex",
+            "g@y-sex"
     );
 
     public boolean isContains(String username) {
