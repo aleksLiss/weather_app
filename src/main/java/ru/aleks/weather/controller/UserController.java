@@ -48,29 +48,14 @@ public class UserController {
     @PostMapping("/user/up")
     public String registerUser(@ModelAttribute SaveUserDto userDto, Model model) {
         Optional<User> savedUser;
-        try {
-            checkRegisterUser.checkRegister(userDto);
-        } catch (IncorrectUsernameException ex) {
-            LOGGER.warn("UserController: this username is invalid");
-            model.addAttribute("username", ex.getMessage());
-            return "sign/sign-up-with-errors";
-        } catch (IncorrectPasswordException ex) {
-            LOGGER.warn("UserController: this password is invalid");
-            model.addAttribute("password", ex.getMessage());
-            return "sign/sign-up-with-errors";
-        }
+        checkRegisterUser.checkRegister(userDto);
         try {
             savedUser = userService.save(userDto);
-        } catch (UserAlreadyExistsException ex) {
-            LOGGER.warn("UserController: this username already exists");
-            model.addAttribute("username", "username already exists");
-            return "sign/sign-up-with-errors";
+        } catch (Exception ex ) {
+            throw new UserAlreadyExistsException(ex.getMessage());
         }
-        if (savedUser.isPresent()) {
-            model.addAttribute("user", savedUser.get());
-            LOGGER.info("UserController: user was successfully registered");
-        }
-        return "sign/sign-in";
+        model.addAttribute("user", savedUser.get());
+        return "/sign/sign-in";
     }
 
     @GetMapping("/login")
