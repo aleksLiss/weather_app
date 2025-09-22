@@ -30,6 +30,7 @@ public class UserService {
             );
         } catch (Exception ex) {
             LOGGER.warn("UserService: User was not saved");
+            throw new RuntimeException(ex.getMessage());
         }
         return savedUser;
     }
