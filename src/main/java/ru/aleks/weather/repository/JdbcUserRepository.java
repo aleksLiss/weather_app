@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
+import ru.aleks.weather.exception.UserAlreadyExistsException;
 import ru.aleks.weather.mapper.UserMapper;
 import ru.aleks.weather.model.User;
 
@@ -43,6 +44,7 @@ public class JdbcUserRepository implements UserRepository {
             LOGGER.info("UserRepository: User was saved");
         } catch (DuplicateKeyException ex) {
             LOGGER.warn("UserRepository: This user already exists");
+            throw new RuntimeException("user already exists");
         }
         return savedUser;
     }
