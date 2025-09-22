@@ -17,23 +17,23 @@ public class CheckRegisterUser {
     }
 
     public String checkRegister(SaveUserDto saveUserDto) {
-            String exMessage = checkValidUsername(saveUserDto.getUsername());
-            if (!"valid".equalsIgnoreCase(exMessage)) {
-                throw new IncorrectUsernameException(exMessage);
-            };
-            exMessage = checkValidPassword(saveUserDto.getUsername(), saveUserDto.getPassword());
-            if (!"valid".equalsIgnoreCase(exMessage)) {
-                throw new IncorrectPasswordException(exMessage);
-            };
-            exMessage = checkValidRepeatPassword(saveUserDto.getPassword(), saveUserDto.getRepeatPassword());
-            if (!"valid".equalsIgnoreCase(exMessage)) {
-                throw new IncorrectPasswordException(exMessage);
-            };
+        String exUsernameMsg = checkValidUsername(saveUserDto.getUsername());
+        if (!"valid".equals(exUsernameMsg)) {
+            throw new IncorrectUsernameException(exUsernameMsg);
+        };
+        String exPasswordMsg = checkValidPassword(saveUserDto.getUsername(), saveUserDto.getPassword());
+        if (!"valid".equals(exPasswordMsg)) {
+            throw new IncorrectPasswordException(exPasswordMsg);
+        };
+        String exRepeatPasswordMsg = checkValidRepeatPassword(saveUserDto.getPassword(), saveUserDto.getRepeatPassword());
+        if (!"valid".equals(exRepeatPasswordMsg)) {
+            throw new IncorrectPasswordException(exRepeatPasswordMsg);
+        };
         return "valid";
     }
 
     private String checkValidUsername(String username) {
-        return commonUsernames.isContains(username.toLowerCase()) ? "no ga#se# names in this app =)" : "valid";
+        return commonUsernames.isContains(username.toLowerCase()) ? "no gay-sex names in this app =)" : "valid";
     }
 
     private String checkValidPassword(String username, String password) {
