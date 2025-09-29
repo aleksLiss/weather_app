@@ -6,13 +6,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
+import org.springframework.test.context.ActiveProfiles;
 import ru.aleks.weather.exception.UserAlreadyExistsException;
 import ru.aleks.weather.mapper.UserMapper;
 import ru.aleks.weather.model.User;
 
 import java.util.Optional;
 
-@Component
+@Repository
 public class JdbcUserRepository implements UserRepository {
 
     private final JdbcTemplate jdbcTemplate;
@@ -84,5 +86,18 @@ public class JdbcUserRepository implements UserRepository {
             LOGGER.warn("UserRepository: User with login: {} was not found", login);
         }
         return Optional.ofNullable(foundUserByLogin);
+    }
+
+    @Override
+    public boolean deleteByLogin(String login) {
+        String sql = "DELETE FROM users WHERE login = ?";
+        int deleted = 0;
+        try {
+            deleted = jdbcTemplate.update(sql, login);
+            LOGGER.info("UserRepository: User with login: {} was deleted", login);
+        } catch (Exception ex) {
+            LOGGER.warn("UserRepository: User with login: {} was not deleted", login);
+        }
+        return deleted != 0;
     }
 }

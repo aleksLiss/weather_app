@@ -14,4 +14,5 @@ public interface UserRepository {
 
     Optional<User> getByLogin(String login);
 
+    boolean deleteByLogin(String login);
 }
