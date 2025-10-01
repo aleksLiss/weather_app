@@ -40,11 +40,12 @@ public class JdbcSessionRepository implements SessionRepository {
             savedSession = Optional.ofNullable(
                     jdbcTemplate
                             .queryForObject(
-                                    "SELECT * FROM users WHERE LOGIN = ?", new Object[]{session.getId()}, sessionMapper
+                                    "SELECT * FROM sessions WHERE id = ?", new Object[]{session.getId()}, sessionMapper
                             ));
             LOGGER.info("SessionRepository: session was saved");
         } catch (Exception exception) {
             LOGGER.warn("SessionRepository: session was not saved");
+            throw new RuntimeException("session was not saved");
         }
         return savedSession;
     }
@@ -63,8 +64,10 @@ public class JdbcSessionRepository implements SessionRepository {
             LOGGER.info("SessionRepository: session was found");
         } catch (EmptyResultDataAccessException e) {
             LOGGER.info("SessionRepository: session not found for id {}", sessionId);
+            throw new RuntimeException("session was not found");
         } catch (Exception ex) {
             LOGGER.error("Error fetching session", ex);
+            throw new RuntimeException("session was not found");
         }
         return foundSession;
     }
