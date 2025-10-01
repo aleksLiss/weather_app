@@ -16,6 +16,4 @@ public interface LocationRepository {
     List<Location> getAllByUserId(int userId);
 
     boolean deleteByUserId(int userId);
-
-    boolean updateByUserId(int userId, double newLatitude, double newLongitude);
 }

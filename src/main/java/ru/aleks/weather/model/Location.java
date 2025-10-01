@@ -13,6 +13,13 @@ public class Location {
     public Location() {
     }
 
+    public Location(String name, int userId, double latitude, double longitude) {
+        this.name = name;
+        this.userId = userId;
+        this.latitude = latitude;
+        this.longitude = longitude;
+    }
+
     public Location(int id, String name, int userId, double latitude, double longitude) {
         this.id = id;
         this.name = name;
