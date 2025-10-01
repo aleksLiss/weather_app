@@ -22,7 +22,7 @@ import static org.mockito.Mockito.*;
 class JdbcLocationRepositoryTest {
 
     private static JdbcLocationRepository jdbcLocationRepository;
-    private static JdbcUserRepository mockJdbcUserRepository;
+    private static JdbcUserRepository jdbcUserRepository;
 
     @BeforeAll
     public static void init() {
@@ -32,24 +32,35 @@ class JdbcLocationRepositoryTest {
         jdbcLocationRepository = new JdbcLocationRepository(
                 jdbcTemplate, new LocationMapper()
         );
+        jdbcUserRepository = new JdbcUserRepository(
+                jdbcTemplate, new UserMapper()
+        );
+    }
 
-        mockJdbcUserRepository = mock(JdbcUserRepository.class);
+    @AfterEach
+    public void clear() {
+        jdbcUserRepository.deleteByLogin("vova");
+        jdbcLocationRepository.deleteByUserId(1);
     }
 
     @Test
     public void whenSavedLocationAndGetItByNameThenReturnSavedLocation() {
-        User user = new User("vova", "123");
-        // Настраиваем мок для метода save, чтобы он возвращал то же самое или Optional.of(user)
-        when(mockJdbcUserRepository.save(any(User.class))).thenReturn(Optional.of(user));
-        // Аналогично для метода getByLogin
-        when(mockJdbcUserRepository.getByLogin("vova")).thenReturn(Optional.of(user));
-        Optional<User> savedUser = mockJdbcUserRepository.save(user);
-        assertThat(savedUser).isPresent();
-        Optional<User> retrievedUser = mockJdbcUserRepository.getByLogin("vova");
-        assertThat(retrievedUser).isPresent();
-        assertThat("vova").isEqualTo(retrievedUser.get().getLogin());
+        Optional<User> savedUser = jdbcUserRepository.getByLogin("vova");
+        if (savedUser.isEmpty()) {
+            User user = new User("vova", "123");
+            savedUser = jdbcUserRepository.save(user);
+            assertThat(savedUser).isPresent();
+        }
+        Location location = new Location(
+                "minsk",
+                savedUser.get().getId(),
+                42.234,
+                42.234
+        );
+        jdbcLocationRepository.save(location);
+        assertThat(jdbcLocationRepository.getByName("minsk").get().getName()).isEqualTo(location.getName());
     }
-/*
+
     @Test
     public void whenDontSavedLocationAndGetItByNameThenReturnEmptyOptional() {
         assertThatThrownBy(() -> jdbcLocationRepository.getByName("123"))
@@ -59,6 +70,9 @@ class JdbcLocationRepositoryTest {
 
     @Test
     public void whenSavedLocationAndGetItByIdThenReturnSavedLocation() {
+        User user = new User("vova", "123");
+        Optional<User> savedUser = jdbcUserRepository.save(user);
+        assertThat(savedUser).isPresent();
         Location location = new Location(
                 "minsk",
                 savedUser.get().getId(),
@@ -66,6 +80,8 @@ class JdbcLocationRepositoryTest {
                 42.234
         );
         Optional<Location> savedLocation = jdbcLocationRepository.save(location);
+        assertThat(savedLocation).isPresent();
+        assertThat(jdbcLocationRepository.getById(savedLocation.get().getId())).isPresent();
         assertThat(jdbcLocationRepository.getById(savedLocation.get().getId()).get().getName()).isEqualTo(location.getName());
     }
 
@@ -78,21 +94,27 @@ class JdbcLocationRepositoryTest {
 
     @Test
     public void whenSavedSomeLocationsAndGetAllThenReturnListSavedLocations() {
+        Optional<User> savedUser = jdbcUserRepository.getByLogin("vova");
+        if (savedUser.isEmpty()) {
+            User user = new User("vova", "123");
+            savedUser = jdbcUserRepository.save(user);
+            assertThat(savedUser).isPresent();
+        }
         Location location = new Location(
                 "minsk",
-                savedUser.getId(),
+                savedUser.get().getId(),
                 42.234,
                 42.234
         );
         Location location2 = new Location(
                 "gomel",
-                savedUser.getId(),
+                savedUser.get().getId(),
                 42.234,
                 42.234
         );
         Optional<Location> savedLocation = jdbcLocationRepository.save(location);
         Optional<Location> savedLocation2 = jdbcLocationRepository.save(location2);
-        assertThat(jdbcLocationRepository.getAllByUserId(savedUser.getId()))
+        assertThat(jdbcLocationRepository.getAllByUserId(savedUser.get().getId()))
                 .isNotEmpty()
                 .hasSize(2)
                 .containsExactly(savedLocation.get(), savedLocation2.get());
@@ -103,7 +125,4 @@ class JdbcLocationRepositoryTest {
         assertThat(jdbcLocationRepository.getAllByUserId(1))
                 .isEmpty();
     }
-
- */
-
 }
