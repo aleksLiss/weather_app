@@ -8,7 +8,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import ru.aleks.weather.mapper.LocationMapper;
 import ru.aleks.weather.model.Location;
-import ru.aleks.weather.model.User;
 
 import java.util.List;
 import java.util.Optional;
@@ -121,5 +120,26 @@ public class JdbcLocationRepository implements LocationRepository {
             throw new RuntimeException("error delete location by user id");
         }
         return deleted != 0;
+    }
+
+    @Override
+    public Optional<Location> getByCoordinates(double latitude, double longitude) {
+        String sql = "SELECT * FROM locations WHERE latitude = ? AND longitude = ?";
+        Optional<Location> foundLocation = Optional.empty();
+        try {
+            foundLocation = Optional.ofNullable(
+                    jdbcTemplate
+                            .queryForObject(
+                                    sql,
+                                    new Object[]{latitude, longitude},
+                                    locationMapper
+                            ));
+            LOGGER.info("LocationRepository: location by name was found");
+        } catch (Exception ex) {
+            LOGGER.warn("LocationRepository: location by name was not found");
+            throw new RuntimeException("error found location by name");
+        }
+        return foundLocation;
+
     }
 }
