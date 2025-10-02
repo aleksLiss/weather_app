@@ -26,7 +26,7 @@ import java.util.UUID;
 
 @Controller
 public class UserController {
-    // todo add common exception center
+
     private final UserService userService;
     private final SessionService sessionService;
     private final CheckRegisterUser checkRegisterUser;
