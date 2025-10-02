@@ -16,7 +16,7 @@ import javax.sql.DataSource;
 @Component
 @Profile("!test")
 @PropertySource("classpath:application.properties")
-public class DatabaseConfig {
+public class PostgresDatabaseConfig {
 
 
     @Autowired
