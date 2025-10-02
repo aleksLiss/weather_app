@@ -16,4 +16,6 @@ public interface LocationRepository {
     List<Location> getAllByUserId(int userId);
 
     boolean deleteByUserId(int userId);
+
+    Optional<Location> getByCoordinates(double latitude, double longitude);
 }
