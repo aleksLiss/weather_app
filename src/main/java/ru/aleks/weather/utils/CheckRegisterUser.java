@@ -1,4 +1,4 @@
-package ru.aleks.weather.check;
+package ru.aleks.weather.utils;
 
 import org.springframework.stereotype.Component;
 import ru.aleks.weather.dto.SaveUserDto;
