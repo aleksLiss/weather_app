@@ -23,10 +23,10 @@
 
 <section id="page-content">
     <div class="container mt-4">
-        <form th:action="@{/location/city}" th:object="${locationCityNameDto}" method="post">
+        <form th:action="@{/location/city}" th:object="${location}" method="post">
         <div class="d-flex my-4">
             <div class="input-group location-search-input-group me-3">
-                <input class="form-control" type="text" name="city" placeholder="Enter location" th:field="*{city}"
+                <input class="form-control" type="text" name="location" placeholder="Enter city or coordinates like '42.222, 24.222'"
                        required>
                 <button class="btn btn-outline-secondary btn-sm clear-input-button" type="button"
                         onclick="this.previousElementSibling.value=''">
@@ -38,7 +38,7 @@
         <div class="col-12 col-lg-3 col-md-6 mb-4">
             <div class="card h-100">
                     <div class="card-body d-flex flex-column">
-                        <h5 class="card-title" th:text="${city}">City Name</h5>
+                        <h5 class="card-title" th:text="${cc}">City Name</h5>
                         <p class="card-text mb-1" th:text="${temperature}">Latitude</p>
                         <p class="card-text mb-1" th:text="${humidity}">Longitude</p>
                         <p class="card-text mb-1" th:text="${country}">Country</p>
