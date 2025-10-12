@@ -1,10 +1,10 @@
 package ru.aleks.weather.utils;
 
-import ru.aleks.weather.dto.LocationAnswerDto;
+import ru.aleks.weather.dto.LocationTransform;
 
 import java.util.Optional;
 
 public interface FormatTransformer {
 
-    Optional<LocationAnswerDto> transform(String json);
+    Optional<LocationTransform> transform(String json);
 }
