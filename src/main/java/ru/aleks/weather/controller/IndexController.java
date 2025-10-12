@@ -15,6 +15,8 @@ public class IndexController {
     private static final String NAMESESSION = "WEATHERAPPSESSIONID";
     private static final Logger LOGGER = LoggerFactory.getLogger(IndexController.class);
 
+    // todo change method: get user and all saved locations where location.userId equal this user
+
     @GetMapping("/")
     public String getIndex(HttpServletRequest request, Model model) {
         HttpSession session = request.getSession();
@@ -32,4 +34,6 @@ public class IndexController {
         }
         return "redirect:/user/up";
     }
+
+    // add button 'x' and method delete location from list user locations
 }
