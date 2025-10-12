@@ -1,9 +1,8 @@
 package ru.aleks.weather.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonSetter;
 
-public class LocationAnswerDto {
+public class LocationTransform {
 
     @JsonProperty("main")
     private MainDto mainDto;
@@ -14,7 +13,7 @@ public class LocationAnswerDto {
     @JsonProperty("weather")
     private WeatherDto[] weatherDto;
 
-    public LocationAnswerDto() {
+    public LocationTransform() {
     }
 
     public double getTemperature() {
