@@ -16,10 +16,6 @@ public class LocationService {
     }
 
     public Optional<Location> getLocationByName(String name) {
-        //check if saved location then return location from db
-        // if not saved than save
-        //
-        //
         return locationRepository.getByName(name);
     }
 

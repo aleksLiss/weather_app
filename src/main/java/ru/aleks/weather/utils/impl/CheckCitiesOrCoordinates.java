@@ -1,14 +1,38 @@
 package ru.aleks.weather.utils.impl;
 
 import org.springframework.stereotype.Component;
-import ru.aleks.weather.utils.CheckCoordinates;
+import ru.aleks.weather.utils.CheckLocations;
+import ru.aleks.weather.utils.Locations;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static ru.aleks.weather.utils.Locations.CITY;
+import static ru.aleks.weather.utils.Locations.COORDINATES;
+
 @Component
-public class CheckLatAndLongCoordinates implements CheckCoordinates {
-        /*
+public class CheckCitiesOrCoordinates implements CheckLocations {
+
+    private static final String REGEX_CITIES = "^[A-Za-z]+$";
+    private static final String REGEX_COORDINATES = "^\\s*([+-]?\\d+(?:\\.\\d+)?)\\s*(?:,|\\s)\\s*([+-]?\\d+(?:\\.\\d+)?)\\s*$";
+
+    @Override
+    public boolean checkLocationByRegex(Enum<Locations> type, String location) {
+        switch (type) {
+            case CITY:
+                Pattern patternCities = Pattern.compile(REGEX_CITIES);
+                Matcher matcherCities = patternCities.matcher(location);
+                return matcherCities.matches();
+            case COORDINATES:
+                Pattern patternCoord = Pattern.compile(REGEX_COORDINATES);
+                Matcher matcherCoord = patternCoord.matcher(location);
+                return matcherCoord.matches();
+            default:
+                return false;
+        }
+    }
+
+            /*
     Корректные варианты (ожидается успешный парсинг):
 52.2296756, 21.0122287
 -52.2296756, -21.0122287
@@ -34,15 +58,4 @@ N52.2296756, E21.0122287 (буквы направления, если не по�
 52.2296756,21.0122287\n (с символом новой строки)
     42.2, 22.22
      */
-    private static final String REGEX_COORDINATES = "^\\s*([+-]?\\d+(?:\\.\\d+)?)\\s*(?:,|\\s)\\s*([+-]?\\d+(?:\\.\\d+)?)\\s*$";
-    private static final String REGEX_CITIES = "^[A-Za-z]+$";
-
-    @Override
-    public boolean checkCoordinates(String location) {
-        Pattern patternCoord = Pattern.compile(REGEX_COORDINATES);
-        Pattern patternCities = Pattern.compile(REGEX_CITIES);
-        Matcher matcherCoord = patternCoord.matcher(location);
-        Matcher matcherCities = patternCities.matcher(location);
-        return matcherCoord.matches() || matcherCities.matches();
-    }
 }
