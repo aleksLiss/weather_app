@@ -22,4 +22,8 @@ public class LocationService {
     public Optional<Location> getByCoordinates(double latitude, double longitude) {
         return locationRepository.getByCoordinates(latitude, longitude);
     }
+
+    public Optional<Location> save(Location location) {
+        return locationRepository.save(location);
+    }
 }
