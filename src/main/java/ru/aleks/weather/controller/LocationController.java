@@ -1,5 +1,7 @@
 package ru.aleks.weather.controller;
 
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -8,12 +10,15 @@ import org.springframework.web.bind.annotation.*;
 import ru.aleks.weather.dto.FoundWeatherDto;
 import ru.aleks.weather.dto.LocationTransform;
 import ru.aleks.weather.dto.LocationGetDto;
+import ru.aleks.weather.model.Location;
+import ru.aleks.weather.model.User;
 import ru.aleks.weather.service.LocationService;
 import ru.aleks.weather.service.UserService;
 import ru.aleks.weather.service.WeatherApiService;
 import ru.aleks.weather.utils.CheckLocations;
 import ru.aleks.weather.utils.TemperatureTransformer;
 
+import java.util.Objects;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -41,7 +46,6 @@ public class LocationController {
 
     @GetMapping("/location/city")
     public String getSearchLocationPage(Model model) {
-        model.addAttribute("location", new LocationTransform());
         return "search-results";
     }
 
@@ -51,8 +55,8 @@ public class LocationController {
         String locationFromDto = locationGetDto.getLocation();
         if (checkCoordinates.checkLocationByRegex(CITY, locationFromDto)) {
             Optional<LocationTransform> answerDto = weatherApiService.getWeatherByCityName(locationFromDto);
-            FoundWeatherDto foundWeatherDto2 = getFoundWeatherDto(answerDto.get());
-            model.addAttribute("weather", foundWeatherDto2);
+            FoundWeatherDto foundWeatherDto = getFoundWeatherDto(answerDto.get());
+            model.addAttribute("weather", foundWeatherDto);
             return "search-results";
         }
         if (checkCoordinates.checkLocationByRegex(COORDINATES, locationFromDto)) {
@@ -70,18 +74,39 @@ public class LocationController {
             model.addAttribute("weather", foundWeatherDto);
             return "search-results";
         }
+        model.addAttribute("weather", new FoundWeatherDto());
         LOGGER.warn("LocationController: city or coordinates not correct");
         model.addAttribute("message", "city or coordinates not correct");
         return "errors/error";
-        }
+    }
 
-        // todo add new method for save found location into repository
+    @PostMapping("/location/add")
+    public String addLocationToUser(@ModelAttribute("weather") FoundWeatherDto foundWeatherDto,
+                                    HttpServletRequest request) {
+        Cookie[] cookies = request.getCookies();
+        // add to search-results username from cookie
+        String username = "";
+        for (Cookie cookie : cookies) {
+            if (cookie.getName().equals("username")) {
+                username = cookie.getValue();
+                break;
+            }
+        }
+        Optional<User> foundUser = userService.getUserByLogin(username);
+        if (foundUser.isEmpty()) {
+            // exception
+        }
+        int id = foundUser.get().getId();
+        Location location = new Location();
         /*
-        @PostMapping("/location/add")
-        public String addLocationToUser() {
-
-        }
+        location.setName(foundWeatherDto.getName());
+        location.setUserId(id);
+        location.setLatitude();
+        location.setLongitude();
+        locationService.save(location);
          */
+        return "redirect:/location/city";
+    }
 
     private FoundWeatherDto getFoundWeatherDto(LocationTransform answerDto) {
         FoundWeatherDto foundWeatherDto = new FoundWeatherDto();
