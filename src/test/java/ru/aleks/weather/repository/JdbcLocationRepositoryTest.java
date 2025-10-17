@@ -40,7 +40,7 @@ class JdbcLocationRepositoryTest {
     @AfterEach
     public void clear() {
         jdbcUserRepository.deleteByLogin("vova");
-        jdbcLocationRepository.deleteByUserId(1);
+        jdbcLocationRepository.deleteByUserIdAndLocationName(1, "minsk");
     }
 
     @Test
@@ -51,7 +51,7 @@ class JdbcLocationRepositoryTest {
             savedUser = jdbcUserRepository.save(user);
         }
         assertThat(savedUser).isPresent();
-        jdbcLocationRepository.deleteByUserId(savedUser.get().getId());
+        jdbcLocationRepository.deleteByUserIdAndLocationName(savedUser.get().getId(), "minsk");
         Location location = new Location(
                 "minsk",
                 savedUser.get().getId(),
@@ -105,7 +105,7 @@ class JdbcLocationRepositoryTest {
             savedUser = jdbcUserRepository.save(user);
         }
         assertThat(savedUser).isPresent();
-        jdbcLocationRepository.deleteByUserId(savedUser.get().getId());
+        jdbcLocationRepository.deleteByUserIdAndLocationName(savedUser.get().getId(), "minsk");
         Location location = new Location(
                 "minsk",
                 savedUser.get().getId(),
@@ -130,6 +130,8 @@ class JdbcLocationRepositoryTest {
 
     @Test
     public void whenDontSavedSomeLocationsAndGetAllThenReturnEmptyList() {
+        jdbcLocationRepository.deleteByUserIdAndLocationName(1, "minsk");
+        jdbcLocationRepository.deleteByUserIdAndLocationName(1, "gomel");
         assertThat(jdbcLocationRepository.getAllByUserId(1))
                 .isEmpty();
     }
