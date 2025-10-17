@@ -23,7 +23,7 @@ public class WeatherApiService {
     private final TokenConfig tokenConfig;
     private final FormatTransformer jsonToDtoTransformer;
 
-    private static final String URL = "https://api.openweathermap.org/data/2.5/weather?";
+    private static final String BASE_URL = "https://api.openweathermap.org/data/2.5/weather?";
     private static final String CITIES_URL = "q=%s&appid=%s";
     private static final String COORDINATES_URL = "lat=%.6f&lon=%.6f&appid=%s";
     private static final Logger LOGGER = LoggerFactory.getLogger(WeatherApiService.class);
@@ -67,7 +67,7 @@ public class WeatherApiService {
     }
 
     private String getUrl(String cityName) {
-        String url = URL + CITIES_URL;
+        String url = BASE_URL + CITIES_URL;
         return String.format(
                 url,
                 cityName,
@@ -75,7 +75,7 @@ public class WeatherApiService {
     }
 
     private String getUrl(double latitude, double longitude) {
-        String coordUrl = URL + COORDINATES_URL;
+        String coordUrl = BASE_URL + COORDINATES_URL;
         return String.format(
                 coordUrl,
                 latitude,

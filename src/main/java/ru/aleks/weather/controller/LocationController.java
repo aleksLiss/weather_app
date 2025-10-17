@@ -51,7 +51,19 @@ public class LocationController {
 
     @PostMapping("/location/city")
     public String getLocationFromApi(@ModelAttribute LocationGetDto locationGetDto,
-                                     Model model) {
+                                     Model model,
+                                     HttpServletRequest request) {
+        Cookie[] cookies = request.getCookies();
+        String foundUserName = null;
+        for (Cookie cookie : cookies) {
+            if (cookie.getName().equals("username")) {
+                LOGGER.info("IndexController: cookie value with name 'username': " + cookie.getValue());
+                foundUserName = cookie.getValue();
+            }
+        }
+        if (foundUserName != null) {
+            model.addAttribute("username", foundUserName);
+        }
         String locationFromDto = locationGetDto.getLocation();
         if (checkCoordinates.checkLocationByRegex(CITY, locationFromDto)) {
             Optional<LocationTransform> answerDto = weatherApiService.getWeatherByCityName(locationFromDto);
@@ -82,9 +94,9 @@ public class LocationController {
 
     @PostMapping("/location/add")
     public String addLocationToUser(@ModelAttribute("weather") FoundWeatherDto foundWeatherDto,
-                                    HttpServletRequest request) {
+                                    HttpServletRequest request,
+                                    Model model) {
         Cookie[] cookies = request.getCookies();
-        // add to search-results username from cookie
         String username = "";
         for (Cookie cookie : cookies) {
             if (cookie.getName().equals("username")) {
@@ -94,18 +106,23 @@ public class LocationController {
         }
         Optional<User> foundUser = userService.getUserByLogin(username);
         if (foundUser.isEmpty()) {
-            // exception
+            model.addAttribute("username", "Гость");
         }
+        model.addAttribute("username", foundUser.get());
         int id = foundUser.get().getId();
         Location location = new Location();
-        /*
+
+        Optional<LocationTransform> locationTransform = weatherApiService.getWeatherByCityName(foundWeatherDto.getName());
+
         location.setName(foundWeatherDto.getName());
         location.setUserId(id);
-        location.setLatitude();
-        location.setLongitude();
+
+        location.setLatitude(locationTransform.get().getCoordsDto().getLat());
+        location.setLongitude(locationTransform.get().getCoordsDto().getLon());
+
         locationService.save(location);
-         */
-        return "redirect:/location/city";
+
+        return "redirect:/";
     }
 
     private FoundWeatherDto getFoundWeatherDto(LocationTransform answerDto) {

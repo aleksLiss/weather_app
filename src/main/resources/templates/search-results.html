@@ -7,20 +7,20 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
 <nav class="navbar navbar-light bg-light">
     <div class="container-fluid">
-        <a class="navbar-brand" href="#">
-            <img src="images/weather-app.png" alt="" width="30" height="24" class="d-inline-block align-text-top">
+        <a class="navbar-brand" href="/">
+            <img src="/static/images/weather-app.png" alt="" width="30" height="24" class="d-inline-block align-text-top">
             Weather Tracker
         </a>
         <div class="d-flex align-items-center">
-            <span class="navbar-text me-3">zhukovsd</span>
+            <span class="navbar-text me-3" th:text="${username}"></span>
+                        <form th:action="@{/logout}" class="mt-4" method="post">
             <button class="btn btn-outline-danger">Sign out</button>
+        </form>
         </div>
     </div>
 </nav>
-
 <section id="page-content">
     <div class="container mt-4">
         <form th:action="@{/location/city}" th:object="${weather}" method="post">
@@ -52,7 +52,7 @@
                             <p class="card-text mb-1" th:text="*{country}">Country: </p>
                             <p class="card-text mb-3" th:text="*{description}">Some about weather: </p>
                             <div class="mt-auto">
-                                <button class="btn btn-primary w-100">Add</button>
+                                <button type="submit" class="btn btn-primary w-100">Add</button>
                             </div>
                         </div>
                     </div>

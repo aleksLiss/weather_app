@@ -7,19 +7,50 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.*;
+import ru.aleks.weather.dto.LocationSendDto;
+import ru.aleks.weather.dto.LocationTransform;
+import ru.aleks.weather.model.Location;
+import ru.aleks.weather.model.User;
+import ru.aleks.weather.service.LocationService;
+import ru.aleks.weather.service.UserService;
+import ru.aleks.weather.service.WeatherApiService;
+import ru.aleks.weather.utils.TemperatureTransformer;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 @Controller
 public class IndexController {
 
     private static final String NAMESESSION = "WEATHERAPPSESSIONID";
     private static final Logger LOGGER = LoggerFactory.getLogger(IndexController.class);
+    private final LocationService locationService;
+    private final UserService userService;
+    private final WeatherApiService weatherApiService;
+    private final TemperatureTransformer temperatureTransformer;
 
-    // todo change method: get user and all saved locations where location.userId equal this user
+
+    public IndexController(LocationService locationService, UserService userService, WeatherApiService weatherApiService, TemperatureTransformer temperatureTransformer) {
+        this.locationService = locationService;
+        this.userService = userService;
+        this.weatherApiService = weatherApiService;
+        this.temperatureTransformer = temperatureTransformer;
+    }
 
     @GetMapping("/")
-    public String getIndex(HttpServletRequest request, Model model) {
-        HttpSession session = request.getSession();
+    public String getIndex(HttpServletRequest request,
+                           Model model) {
+        /* logic:
+            1. user found in db -> if not -> redirect to register
+            2. if user found in db -> session and cookie with name username found
+            3. if session not found or session time out or cookie not found -> create new session
+            4. if session found -> check time when create session
+            5. if not -> create new session
+            6. if session time not out -> send index page with get all locations this user
+
+         */
         Cookie[] cookies = request.getCookies();
         String foundUserName = null;
         for (Cookie cookie : cookies) {
@@ -30,10 +61,50 @@ public class IndexController {
         }
         if (foundUserName != null) {
             model.addAttribute("username", foundUserName);
+            Optional<User> foundUser = userService.getUserByLogin(foundUserName);
+
+            List<Location> locationList = locationService.getAllLocationsByUserId(foundUser.get().getId());
+            List<LocationSendDto> locationSendDtos = new ArrayList<>();
+            for (Location location : locationList) {
+                LocationSendDto locationSendDto = new LocationSendDto();
+                Optional<LocationTransform> locationTransform = weatherApiService.getWeatherByCoordinates(
+                        location.getLatitude(),
+                        location.getLongitude()
+                );
+                locationSendDto.setCityName(location.getName());
+                locationSendDto.setTemperature(
+                        String.format("%.1f", temperatureTransformer.fromKelvinsToCelsius(locationTransform.get().getTemperature())));
+                locationSendDto.setHumidity(locationTransform.get().getHumidity());
+                locationSendDto.setCountryName(locationTransform.get().getCountry());
+                locationSendDto.setDescriptionWeather(locationTransform.get().getDescription());
+                locationSendDtos.add(locationSendDto);
+            }
+            model.addAttribute("locations", locationSendDtos);
             return "index";
         }
         return "redirect:/user/up";
     }
-
-    // add button 'x' and method delete location from list user locations
+    // todo add to dto icon field and get it from query
+    // todo create method for build url to icon in weatherapi
+    @PostMapping("/delete")
+    public String deleteLocation(@RequestParam("cityName") String cityName,
+                                 HttpServletRequest request,
+                                 Model model) {
+        Cookie[] cookies = request.getCookies();
+        String foundUserName = null;
+        for (Cookie cookie : cookies) {
+            if (cookie.getName().equals("username")) {
+                LOGGER.info("IndexController: cookie value with name 'username': " + cookie.getValue());
+                foundUserName = cookie.getValue();
+            }
+        }
+        LOGGER.info("send dto loc : " + cityName);
+        LOGGER.info("user" + foundUserName);
+        if (foundUserName != null) {
+            model.addAttribute("username", foundUserName);
+            Optional<User> foundUser = userService.getUserByLogin(foundUserName);
+            locationService.deleteLocationByUserId(foundUser.get().getId(), cityName);
+        }
+        return "redirect:/";
+    }
 }

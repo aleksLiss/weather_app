@@ -109,11 +109,11 @@ public class JdbcLocationRepository implements LocationRepository {
     }
 
     @Override
-    public boolean deleteByUserId(int userId) {
+    public boolean deleteByUserIdAndLocationName(int userId, String name) {
         int deleted;
-        String sql = "DELETE FROM locations WHERE user_id = ?";
+        String sql = "DELETE FROM locations WHERE user_id = ? AND name = ?";
         try {
-            deleted = jdbcTemplate.update(sql, userId);
+            deleted = jdbcTemplate.update(sql, userId, name);
             LOGGER.info("LocationRepository: location by user id was deleted");
         } catch (Exception ex) {
             LOGGER.warn("LocationRepository: location by user id was not deleted");
