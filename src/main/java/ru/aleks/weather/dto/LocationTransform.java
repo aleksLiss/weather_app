@@ -12,8 +12,14 @@ public class LocationTransform {
     private CountryDto countryDto;
     @JsonProperty("weather")
     private WeatherDto[] weatherDto;
+    @JsonProperty("coord")
+    private CoordsDto coordsDto;
 
     public LocationTransform() {
+    }
+
+    public CoordsDto getCoordsDto() {
+        return coordsDto;
     }
 
     public double getTemperature() {
