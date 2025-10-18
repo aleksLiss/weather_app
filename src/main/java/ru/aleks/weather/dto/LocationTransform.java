@@ -46,4 +46,7 @@ public class LocationTransform {
         return weatherDto[0].getMainWeather();
     }
 
+    public String getIcon() {
+        return weatherDto[0].getIcon();
+    }
 }
