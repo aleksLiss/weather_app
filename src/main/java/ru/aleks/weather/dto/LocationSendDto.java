@@ -6,6 +6,7 @@ public class LocationSendDto {
     private String countryName;
     private String descriptionWeather;
     private int humidity;
+    private String icon;
 
     public LocationSendDto() {
     }
@@ -16,6 +17,14 @@ public class LocationSendDto {
 
     public void setTemperature(String temperature) {
         this.temperature = temperature;
+    }
+
+    public String getIcon() {
+        return icon;
+    }
+
+    public void setIcon(String icon) {
+        this.icon = icon;
     }
 
     public String getCityName() {
