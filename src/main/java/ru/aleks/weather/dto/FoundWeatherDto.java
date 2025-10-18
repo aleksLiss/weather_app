@@ -7,16 +7,26 @@ public class FoundWeatherDto {
     private int humidity;
     private String country;
     private String description;
+    private String icon;
 
     public FoundWeatherDto() {
     }
 
-    public FoundWeatherDto(String name, String temperature, int humidity, String country, String description) {
+    public FoundWeatherDto(String name, String temperature, int humidity, String country, String description, String icon) {
         this.name = name;
         this.temperature = temperature;
         this.humidity = humidity;
         this.country = country;
         this.description = description;
+        this.icon = icon;
+    }
+
+    public String getIcon() {
+        return icon;
+    }
+
+    public void setIcon(String icon) {
+        this.icon = icon;
     }
 
     public String getName() {

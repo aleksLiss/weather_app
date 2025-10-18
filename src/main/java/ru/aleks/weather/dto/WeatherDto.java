@@ -6,14 +6,26 @@ public class WeatherDto {
 
     @JsonSetter("main")
     private String mainWeather;
+    @JsonSetter("description")
     private String description;
+    @JsonSetter("icon")
+    private String icon;
 
     public WeatherDto() {
     }
 
-    public WeatherDto(String mainWeather, String description) {
+    public WeatherDto(String mainWeather, String description, String icon) {
         this.mainWeather = mainWeather;
         this.description = description;
+        this.icon = icon;
+    }
+
+    public String getIcon() {
+        return icon;
+    }
+
+    public void setIcon(String icon) {
+        this.icon = icon;
     }
 
     public String getMainWeather() {

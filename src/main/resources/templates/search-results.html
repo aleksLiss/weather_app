@@ -47,6 +47,9 @@
                             <input type="hidden" th:field="*{country}" />
                             <input type="hidden" th:field="*{description}"/>
                             <h5 class="card-title" th:text="*{name}">City Name: </h5>
+                            <img th:src="${weather.icon}"
+                                 class="card-img-top img-fluid"
+                                 alt="Weather icon">
                             <p class="card-text mb-1" th:text="*{temperature}">Temperature: </p>
                             <p class="card-text mb-1" th:text="*{humidity}">Humidity: </p>
                             <p class="card-text mb-1" th:text="*{country}">Country: </p>

@@ -2,7 +2,6 @@ package ru.aleks.weather.controller;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -42,15 +41,7 @@ public class IndexController {
     @GetMapping("/")
     public String getIndex(HttpServletRequest request,
                            Model model) {
-        /* logic:
-            1. user found in db -> if not -> redirect to register
-            2. if user found in db -> session and cookie with name username found
-            3. if session not found or session time out or cookie not found -> create new session
-            4. if session found -> check time when create session
-            5. if not -> create new session
-            6. if session time not out -> send index page with get all locations this user
 
-         */
         Cookie[] cookies = request.getCookies();
         String foundUserName = null;
         for (Cookie cookie : cookies) {
@@ -71,6 +62,8 @@ public class IndexController {
                         location.getLatitude(),
                         location.getLongitude()
                 );
+                String urlForImg = "https://openweathermap.org/img/wn/" + locationTransform.get().getIcon() + ".png";
+                locationSendDto.setIcon(urlForImg);
                 locationSendDto.setCityName(location.getName());
                 locationSendDto.setTemperature(
                         String.format("%.1f", temperatureTransformer.fromKelvinsToCelsius(locationTransform.get().getTemperature())));
@@ -84,8 +77,7 @@ public class IndexController {
         }
         return "redirect:/user/up";
     }
-    // todo add to dto icon field and get it from query
-    // todo create method for build url to icon in weatherapi
+
     @PostMapping("/delete")
     public String deleteLocation(@RequestParam("cityName") String cityName,
                                  HttpServletRequest request,
