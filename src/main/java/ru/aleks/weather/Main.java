@@ -9,3 +9,14 @@ public class Main {
         SpringApplication.run(Main.class, args);
     }
 }
+// todo add try catch exception if not correct city or coordinates
+
+// todo check time session obviously
+//  time out and check in different browsers
+
+// todo fix display images in index page
+
+// todo improve code
+// todo delete unnecessaries dto's
+
+// todo create tests for another services and controllers
