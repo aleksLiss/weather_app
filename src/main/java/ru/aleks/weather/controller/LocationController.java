@@ -18,7 +18,6 @@ import ru.aleks.weather.service.WeatherApiService;
 import ru.aleks.weather.utils.CheckLocations;
 import ru.aleks.weather.utils.TemperatureTransformer;
 
-import java.util.Objects;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -68,6 +67,9 @@ public class LocationController {
         if (checkCoordinates.checkLocationByRegex(CITY, locationFromDto)) {
             Optional<LocationTransform> answerDto = weatherApiService.getWeatherByCityName(locationFromDto);
             FoundWeatherDto foundWeatherDto = getFoundWeatherDto(answerDto.get());
+            String urlForImg = "https://openweathermap.org/img/wn/" + answerDto.get().getIcon() + ".png";
+            LOGGER.warn("icon location found : " + urlForImg);
+            foundWeatherDto.setIcon(urlForImg);
             model.addAttribute("weather", foundWeatherDto);
             return "search-results";
         }
@@ -83,6 +85,9 @@ public class LocationController {
             double longitude = Double.parseDouble(matcher.group(2));
             Optional<LocationTransform> locationTransform = weatherApiService.getWeatherByCoordinates(latitude, longitude);
             FoundWeatherDto foundWeatherDto = getFoundWeatherDto(locationTransform.get());
+            String urlForImg = "https://openweathermap.org/img/wn/" + locationTransform.get().getIcon() + ".png";
+            LOGGER.warn("icon location found : " + urlForImg);
+            foundWeatherDto.setIcon(urlForImg);
             model.addAttribute("weather", foundWeatherDto);
             return "search-results";
         }
