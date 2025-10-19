@@ -37,17 +37,11 @@ class JdbcLocationRepositoryTest {
         );
     }
 
-    @AfterEach
-    public void clear() {
-        jdbcUserRepository.deleteByLogin("vova");
-        jdbcLocationRepository.deleteByUserIdAndLocationName(1, "minsk");
-    }
-
     @Test
     public void whenSavedLocationAndGetItByNameThenReturnSavedLocation() {
-        Optional<User> savedUser = jdbcUserRepository.getByLogin("vova");
+        Optional<User> savedUser = jdbcUserRepository.getByLogin("nina");
         if (savedUser.isEmpty()) {
-            User user = new User("vova", "123");
+            User user = new User("nina", "123");
             savedUser = jdbcUserRepository.save(user);
         }
         assertThat(savedUser).isPresent();
@@ -75,7 +69,7 @@ class JdbcLocationRepositoryTest {
 
     @Test
     public void whenSavedLocationAndGetItByIdThenReturnSavedLocation() {
-        User user = new User("vova", "123");
+        User user = new User("nina", "123");
         Optional<User> savedUser = jdbcUserRepository.save(user);
         assertThat(savedUser).isPresent();
         Location location = new Location(
@@ -99,9 +93,9 @@ class JdbcLocationRepositoryTest {
 
     @Test
     public void whenSavedSomeLocationsAndGetAllThenReturnListSavedLocations() {
-        Optional<User> savedUser = jdbcUserRepository.getByLogin("vova");
+        Optional<User> savedUser = jdbcUserRepository.getByLogin("nina");
         if (savedUser.isEmpty()) {
-            User user = new User("vova", "123");
+            User user = new User("nina", "123");
             savedUser = jdbcUserRepository.save(user);
         }
         assertThat(savedUser).isPresent();
