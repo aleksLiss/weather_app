@@ -6,6 +6,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ActiveProfiles;
 import ru.aleks.weather.config.H2DatabaseConfig;
+import ru.aleks.weather.exception.UserAlreadyExistsException;
+import ru.aleks.weather.exception.UserNotFoundException;
 import ru.aleks.weather.mapper.UserMapper;
 import ru.aleks.weather.model.User;
 
@@ -28,7 +30,7 @@ class JdbcUserRepositoryTest {
         DataSource dataSource = h2DatabaseConfig.dataSource();
         JdbcTemplate jdbcTemplate = h2DatabaseConfig.jdbcTemplate(dataSource);
         jdbcUserRepository = new JdbcUserRepository(
-            jdbcTemplate, new UserMapper()
+                jdbcTemplate, new UserMapper()
         );
     }
 
@@ -47,7 +49,9 @@ class JdbcUserRepositoryTest {
 
     @Test
     public void whenDontSavedUserAndGetByLoginThenReturnEmptyOptional() {
-        assertThat(jdbcUserRepository.getByLogin("")).isEqualTo(Optional.empty());
+        assertThatThrownBy(() -> jdbcUserRepository.getByLogin(""))
+                .isInstanceOf(UserNotFoundException.class)
+                .hasMessage("User with login: " + " was not found");
     }
 
     @Test
@@ -57,7 +61,7 @@ class JdbcUserRepositoryTest {
                 user
         );
         assertThatThrownBy(() -> jdbcUserRepository.save(user))
-                .isInstanceOf(RuntimeException.class)
+                .isInstanceOf(UserAlreadyExistsException.class)
                 .hasMessage("user already exists");
     }
 
@@ -72,6 +76,8 @@ class JdbcUserRepositoryTest {
 
     @Test
     public void whenDontSavedUserAndGetByIdThenReturnEmptyOptional() {
-        assertThat(jdbcUserRepository.getById(1)).isEqualTo(Optional.empty());
+        assertThatThrownBy(() -> jdbcUserRepository.getById(1))
+                .isInstanceOf(UserNotFoundException.class)
+                .hasMessage("User with id: " + 1 + "not found");
     }
 }
