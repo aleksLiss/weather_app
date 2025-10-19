@@ -1,8 +1,12 @@
 package ru.aleks.weather.dto;
 
+import com.fasterxml.jackson.annotation.JsonSetter;
+
 public class CoordsDto {
 
+    @JsonSetter("lat")
     private double lat;
+    @JsonSetter("lon")
     private double lon;
 
     public CoordsDto() {
