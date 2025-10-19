@@ -6,6 +6,9 @@ import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+import ru.aleks.weather.exception.FailedDeleteLocationException;
+import ru.aleks.weather.exception.FailedSaveLocationException;
+import ru.aleks.weather.exception.LocationNotFoundException;
 import ru.aleks.weather.mapper.LocationMapper;
 import ru.aleks.weather.model.Location;
 
@@ -40,12 +43,12 @@ public class JdbcLocationRepository implements LocationRepository {
             savedLocation = Optional.ofNullable(
                     jdbcTemplate
                             .queryForObject(
-                                    "SELECT * FROM locations WHERE NAME = ?", new Object[]{location.getName()}, locationMapper
+                                    "SELECT * FROM locations WHERE NAME = ? AND user_id = ?", new Object[]{location.getName(), location.getUserId()}, locationMapper
                             ));
             LOGGER.info("LocationRepository: Location was saved");
         } catch (DuplicateKeyException ex) {
             LOGGER.warn("LocationRepository: Location was not saved");
-            throw new RuntimeException("location was not saved");
+            throw new FailedSaveLocationException("location was not saved");
         }
         return savedLocation;
     }
@@ -65,7 +68,7 @@ public class JdbcLocationRepository implements LocationRepository {
             LOGGER.info("LocationRepository: location by name was found");
         } catch (Exception ex) {
             LOGGER.warn("LocationRepository: location by name was not found");
-            throw new RuntimeException("error found location by name");
+            throw new LocationNotFoundException("error found location by name");
         }
         return foundLocation;
     }
@@ -85,7 +88,7 @@ public class JdbcLocationRepository implements LocationRepository {
             LOGGER.info("LocationRepository: location by id was found");
         } catch (Exception ex) {
             LOGGER.warn("LocationRepository: location by id was not found");
-            throw new RuntimeException("error found location by id");
+            throw new LocationNotFoundException("error found location by id");
         }
         return foundLocation;
     }
@@ -103,7 +106,7 @@ public class JdbcLocationRepository implements LocationRepository {
             LOGGER.info("LocationRepository: locations by user id was found");
         } catch (Exception ex) {
             LOGGER.warn("LocationRepository: locations by user id was not found");
-            throw new RuntimeException("error get all locations by user id");
+            throw new LocationNotFoundException("error get all locations by user id");
         }
         return foundLocationsByUserId;
     }
@@ -117,7 +120,7 @@ public class JdbcLocationRepository implements LocationRepository {
             LOGGER.info("LocationRepository: location by user id was deleted");
         } catch (Exception ex) {
             LOGGER.warn("LocationRepository: location by user id was not deleted");
-            throw new RuntimeException("error delete location by user id");
+            throw new FailedDeleteLocationException("error delete location by user id");
         }
         return deleted != 0;
     }
@@ -137,7 +140,7 @@ public class JdbcLocationRepository implements LocationRepository {
             LOGGER.info("LocationRepository: location by name was found");
         } catch (Exception ex) {
             LOGGER.warn("LocationRepository: location by name was not found");
-            throw new RuntimeException("error found location by name");
+            throw new LocationNotFoundException("error found location by name");
         }
         return foundLocation;
 

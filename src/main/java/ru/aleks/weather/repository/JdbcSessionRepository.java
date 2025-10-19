@@ -3,14 +3,14 @@ package ru.aleks.weather.repository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+import ru.aleks.weather.exception.FailedDeleteSessionException;
+import ru.aleks.weather.exception.FailedSaveSessionException;
+import ru.aleks.weather.exception.SessionNotFoundException;
 import ru.aleks.weather.mapper.SessionMapper;
 import ru.aleks.weather.model.Session;
 
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -45,7 +45,7 @@ public class JdbcSessionRepository implements SessionRepository {
             LOGGER.info("SessionRepository: session was saved");
         } catch (Exception exception) {
             LOGGER.warn("SessionRepository: session was not saved");
-            throw new RuntimeException("session was not saved");
+            throw new FailedSaveSessionException("session was not saved");
         }
         return savedSession;
     }
@@ -62,12 +62,9 @@ public class JdbcSessionRepository implements SessionRepository {
                             sessionMapper)
             );
             LOGGER.info("SessionRepository: session was found");
-        } catch (EmptyResultDataAccessException e) {
-            LOGGER.info("SessionRepository: session not found for id {}", sessionId);
-            throw new RuntimeException("session was not found");
         } catch (Exception ex) {
-            LOGGER.error("Error fetching session", ex);
-            throw new RuntimeException("session was not found");
+            LOGGER.warn("SessionRepository: Error get session by id", ex);
+            throw new SessionNotFoundException("session was not found");
         }
         return foundSession;
     }
@@ -81,6 +78,7 @@ public class JdbcSessionRepository implements SessionRepository {
             LOGGER.info("SessionRepository: session with id {} was deleted", sessionId);
         } catch (Exception ex) {
             LOGGER.warn("SessionRepository: session with id {} was not deleted", sessionId);
+            throw new FailedDeleteSessionException("session with id " + sessionId + " was not deleted");
         }
         return deleted != 0;
     }

@@ -5,10 +5,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
-import org.springframework.test.context.ActiveProfiles;
+import ru.aleks.weather.exception.FailedDeleteUserException;
 import ru.aleks.weather.exception.UserAlreadyExistsException;
+import ru.aleks.weather.exception.UserNotFoundException;
 import ru.aleks.weather.mapper.UserMapper;
 import ru.aleks.weather.model.User;
 
@@ -46,7 +46,7 @@ public class JdbcUserRepository implements UserRepository {
             LOGGER.info("UserRepository: User was saved");
         } catch (DuplicateKeyException ex) {
             LOGGER.warn("UserRepository: This user already exists");
-            throw new RuntimeException("user already exists");
+            throw new UserAlreadyExistsException("user already exists");
         }
         return savedUser;
     }
@@ -60,6 +60,7 @@ public class JdbcUserRepository implements UserRepository {
             LOGGER.info("UserRepository: User with id: {} was deleted", id);
         } catch (Exception ex) {
             LOGGER.warn("UserRepository: User with id: {} was not deleted", id);
+            throw new FailedDeleteUserException("User with id: " + id + " was not deleted");
         }
         return deleted != 0;
     }
@@ -72,6 +73,7 @@ public class JdbcUserRepository implements UserRepository {
             user = jdbcTemplate.queryForObject(sql, new Object[]{id}, userMapper);
         } catch (Exception ex) {
             LOGGER.warn("UserRepository: User with id: {} not found", id);
+            throw new UserNotFoundException("User with id: " + id + "not found");
         }
         return Optional.ofNullable(user);
     }
@@ -84,6 +86,7 @@ public class JdbcUserRepository implements UserRepository {
             foundUserByLogin = jdbcTemplate.queryForObject(sql, new Object[]{login}, userMapper);
         } catch (Exception ex) {
             LOGGER.warn("UserRepository: User with login: {} was not found", login);
+            throw new UserNotFoundException("User with login: " + login + " was not found");
         }
         return Optional.ofNullable(foundUserByLogin);
     }
@@ -91,12 +94,13 @@ public class JdbcUserRepository implements UserRepository {
     @Override
     public boolean deleteByLogin(String login) {
         String sql = "DELETE FROM users WHERE login = ?";
-        int deleted = 0;
+        int deleted;
         try {
             deleted = jdbcTemplate.update(sql, login);
             LOGGER.info("UserRepository: User with login: {} was deleted", login);
         } catch (Exception ex) {
             LOGGER.warn("UserRepository: User with login: {} was not deleted", login);
+            throw new FailedDeleteUserException("User with login: " + login + " was not deleted");
         }
         return deleted != 0;
     }
