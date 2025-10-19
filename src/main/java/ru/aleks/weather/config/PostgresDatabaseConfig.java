@@ -11,13 +11,11 @@ import org.springframework.stereotype.Component;
 
 import javax.sql.DataSource;
 
-
 @Configuration
 @Component
 @Profile("!test")
 @PropertySource("classpath:application.properties")
 public class PostgresDatabaseConfig {
-
 
     @Autowired
     Environment environment;
@@ -26,7 +24,6 @@ public class PostgresDatabaseConfig {
     private final String USERNAME = "spring.datasource.username";
     private final String PASSWORD = "spring.datasource.password";
     private final String DRIVER = "spring.datasource.driver-class-name";
-
 
     @Bean
     public DataSource dataSource() {
