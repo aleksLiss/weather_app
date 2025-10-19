@@ -64,37 +64,49 @@ public class LocationController {
             model.addAttribute("username", foundUserName);
         }
         String locationFromDto = locationGetDto.getLocation();
-        if (checkCoordinates.checkLocationByRegex(CITY, locationFromDto)) {
-            Optional<LocationTransform> answerDto = weatherApiService.getWeatherByCityName(locationFromDto);
-            FoundWeatherDto foundWeatherDto = getFoundWeatherDto(answerDto.get());
-            String urlForImg = "https://openweathermap.org/img/wn/" + answerDto.get().getIcon() + ".png";
-            LOGGER.warn("icon location found : " + urlForImg);
-            foundWeatherDto.setIcon(urlForImg);
-            model.addAttribute("weather", foundWeatherDto);
-            return "search-results";
-        }
-        if (checkCoordinates.checkLocationByRegex(COORDINATES, locationFromDto)) {
-            Pattern patt = Pattern.compile("^\\s*(\\d+(?:\\.\\d+)?)\\s*[ ,]\\s*(\\d+(?:\\.\\d+)?)\\s*$");
-            Matcher matcher = patt.matcher(locationFromDto);
-            if (!matcher.matches()) {
-                LOGGER.warn("LocationController: incorrect coordinates");
-                model.addAttribute("message", "incorrect coordinates");
-                return "errors/error";
+        try {
+            if (checkCoordinates.checkLocationByRegex(CITY, locationFromDto)) {
+                Optional<LocationTransform> answerDto = weatherApiService.getWeatherByCityName(locationFromDto);
+                FoundWeatherDto foundWeatherDto = getFoundWeatherDto(answerDto.get());
+                String urlForImg = "https://openweathermap.org/img/wn/" + answerDto.get().getIcon() + ".png";
+                LOGGER.warn("icon location found : " + urlForImg);
+                foundWeatherDto.setIcon(urlForImg);
+                model.addAttribute("weather", foundWeatherDto);
+                return "search-results";
             }
-            double latitude = Double.parseDouble(matcher.group(1));
-            double longitude = Double.parseDouble(matcher.group(2));
-            Optional<LocationTransform> locationTransform = weatherApiService.getWeatherByCoordinates(latitude, longitude);
-            FoundWeatherDto foundWeatherDto = getFoundWeatherDto(locationTransform.get());
-            String urlForImg = "https://openweathermap.org/img/wn/" + locationTransform.get().getIcon() + ".png";
-            LOGGER.warn("icon location found : " + urlForImg);
-            foundWeatherDto.setIcon(urlForImg);
-            model.addAttribute("weather", foundWeatherDto);
-            return "search-results";
+        } catch (Exception ex) {
+            LOGGER.warn("LocationController: name city incorrect");
+            model.addAttribute("message", "incorrect city name");
+            return "errors/error";
+        }
+        try {
+            if (checkCoordinates.checkLocationByRegex(COORDINATES, locationFromDto)) {
+                Pattern patt = Pattern.compile("^\\s*(\\d+(?:\\.\\d+)?)\\s*[ ,]\\s*(\\d+(?:\\.\\d+)?)\\s*$");
+                Matcher matcher = patt.matcher(locationFromDto);
+                if (!matcher.matches()) {
+                    LOGGER.warn("LocationController: incorrect coordinates");
+                    model.addAttribute("message", "incorrect coordinates");
+                    return "errors/error";
+                }
+                double latitude = Double.parseDouble(matcher.group(1));
+                double longitude = Double.parseDouble(matcher.group(2));
+                Optional<LocationTransform> locationTransform = weatherApiService.getWeatherByCoordinates(latitude, longitude);
+                FoundWeatherDto foundWeatherDto = getFoundWeatherDto(locationTransform.get());
+                String urlForImg = "https://openweathermap.org/img/wn/" + locationTransform.get().getIcon() + ".png";
+                LOGGER.warn("icon location found : " + urlForImg);
+                foundWeatherDto.setIcon(urlForImg);
+                model.addAttribute("weather", foundWeatherDto);
+                return "search-results";
+            }
+        } catch (Exception ex) {
+            LOGGER.warn("LocationController: coordinates incorrect");
+            model.addAttribute("message", "incorrect coordinates");
+            return "errors/error";
         }
         model.addAttribute("weather", new FoundWeatherDto());
         LOGGER.warn("LocationController: city or coordinates not correct");
         model.addAttribute("message", "city or coordinates not correct");
-        return "errors/error";
+        return "/errors/error";
     }
 
     @PostMapping("/location/add")

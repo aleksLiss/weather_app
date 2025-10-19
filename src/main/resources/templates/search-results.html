@@ -1,26 +1,8 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>Weather Viewer – Homepage</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
-</head>
+<header th:replace="~{fragments/header :: header}"></header>
 <body>
-<nav class="navbar navbar-light bg-light">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="/">
-            <img src="/static/images/weather-app.png" alt="" width="30" height="24" class="d-inline-block align-text-top">
-            Weather Tracker
-        </a>
-        <div class="d-flex align-items-center">
-            <span class="navbar-text me-3" th:text="${username}"></span>
-                        <form th:action="@{/logout}" class="mt-4" method="post">
-            <button class="btn btn-outline-danger">Sign out</button>
-        </form>
-        </div>
-    </div>
-</nav>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
 <section id="page-content">
     <div class="container mt-4">
         <form th:action="@{/location/city}" th:object="${weather}" method="post">
@@ -46,14 +28,14 @@
                             <input type="hidden" th:field="*{humidity}" />
                             <input type="hidden" th:field="*{country}" />
                             <input type="hidden" th:field="*{description}"/>
-                            <h5 class="card-title" th:text="*{name}">City Name: </h5>
+                            <h5 class="card-title">City: <span th:text="*{name}"></span></h5>
                             <img th:src="${weather.icon}"
                                  class="card-img-top img-fluid"
                                  alt="Weather icon">
-                            <p class="card-text mb-1" th:text="*{temperature}">Temperature: </p>
-                            <p class="card-text mb-1" th:text="*{humidity}">Humidity: </p>
-                            <p class="card-text mb-1" th:text="*{country}">Country: </p>
-                            <p class="card-text mb-3" th:text="*{description}">Some about weather: </p>
+                            <p class="card-text mb-1">Temperature:  <span th:text="*{temperature}"></span>°C</p>
+                            <p class="card-text mb-1">Humidity: <span th:text="*{humidity}"></span>%</p>
+                            <p class="card-text mb-1">Country: <span th:text="*{country}"></span></p>
+                            <p class="card-text mb-3">About weather: <span th:text="*{description}"></span></p>
                             <div class="mt-auto">
                                 <button type="submit" class="btn btn-primary w-100">Add</button>
                             </div>
@@ -64,12 +46,7 @@
         </div>
     </div>
 </section>
-
-<footer class="d-flex flex-wrap justify-content-between align-items-center py-3 mt-4 border-top">
-    <div class="px-4">
-        <span>© Weather Viewer, project from <a href="https://zhukovsd.github.io/java-backend-learning-course/">zhukovsd/java-backend-learning-course</a> roadmap.</span>
-    </div>
-</footer>
-
+<div th:replace="~{fragments/footer :: footer}">
+</div>
 </body>
 </html>
