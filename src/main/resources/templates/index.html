@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<header th:replace="~{header/header :: header}"></header>
+<nav th:replace="~{navbar/navbar :: navbar}"></nav>
+<body>
+<section id="page-content">
+    <div class="container mt-4">
+        <form th:action="@{/location/search}" th:object="${searchLocationDto}" th:method="post">
+            <div class="d-flex my-4">
+                <div class="input-group location-search-input-group me-3">
+                    <input class="form-control" type="text" name="name" placeholder="Enter location" required>
+                    <button class="btn btn-outline-secondary btn-sm clear-input-button" type="button"
+                            onclick="this.previousElementSibling.value=''">
+                        &times;
+                    </button>
+                </div>
+                <button class="btn btn-outline-success">Search</button>
+            </div>
+        </form>
+        <div>
+            <div class="row">
+                <div class="col-12 col-lg-3 col-md-6 mb-4" th:each="weatherDto : ${weatherDtoList}">
+                    <div class="card h-100 position-relative weather-card">
+                        <form th:action="@{/location/delete}" th:method="post">
+                        <div class="position-absolute weather-card-delete-form">
+                            <input type="hidden" name="locationName" th:value="${weatherDto.location}" />
+                            <button class="btn-close" type="submit" aria-label="Delete"></button>
+                        </div>
+                        </form>
+                        <img class="card-img-top img-fluid"
+                             th:src="${weatherDto.image}"
+                             alt="Weather icon">
+                        <div class="card-body d-flex flex-column">
+                            <h3 class="card-text">Temperature: <span th:text="${weatherDto.temperature}"></span> °C</h3>
+                            <h3 class="card-title"><span th:text="${weatherDto.location}"></span></h3>
+                            <p class="card-text mb-1"><span th:text="${weatherDto.description}"></span>
+                            </p>
+                            <p class="card-text mb-1">Humidity: <span th:text="${weatherDto.humidity}"></span> %</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<footer th:replace="~{footer/footer :: footer}"></footer>
+</body>
+</html>
