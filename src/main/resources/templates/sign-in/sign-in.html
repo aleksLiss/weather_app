@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<header th:replace="~{header/header :: header}"></header>
+<body>
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-6">
+            <div class="weather-logo"></div>
+        </div>
+    </div>
+    <h2 class="text-center mb-5">Sign In</h2>
+    <div class="row justify-content-center">
+        <div class="col-12 col-lg-4 col-md-6 col-sm-12">
+            <form th:action="@{/sign/in}" th:object="${signInUserDto}" class="mt-4" th:method="post">
+                <div class="mb-3">
+                    <label for="username" class="form-label">Username</label>
+                    <input type="text" class="form-control" id="username" th:field="*{login}" required value=""/>
+                </div>
+                <div class="mb-3">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" class="form-control" id="password" th:field="*{password}" required value=""/>
+                </div>
+                <input type="hidden" name="redirect_to" value="http://localhost/"/>
+                <button type="submit" class="btn btn-primary w-100 mt-3">Sign In</button>
+                <p class="mt-2 text-center">Don't have an account? <a href="/sign/up">Sign up here</a></p>
+            </form>
+        </div>
+    </div>
+</div>
+<footer th:replace="~{footer/footer :: footer}"></footer>
+</body>
+</html>
