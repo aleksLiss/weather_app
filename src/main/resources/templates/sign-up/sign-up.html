@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<header th:replace="~{header/header :: header}"></header>
+<body>
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-6">
+            <div class="weather-logo"></div>
+        </div>
+    </div>
+    <h2 class="text-center mb-5">Sign Up</h2>
+    <div class="row justify-content-center">
+        <div class="col-12 col-lg-4 col-md-6 col-sm-12">
+            <form th:action="@{/sign/up}" th:object="${saveUserDto}" class="mt-4" th:method="post">
+                <div class="mb-3">
+                    <label for="username" class="form-label">Username</label>
+                    <input type="text" class="form-control" id="username" th:field="*{login}" required value=""/>
+                </div>
+                <div class="mb-3">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" class="form-control" id="password" th:field="*{password}" required value=""/>
+                </div>
+                <div class="mb-3">
+                    <label for="repeatPassword" class="form-label">Repeat password</label>
+                    <input type="password" class="form-control" id="repeatPassword" th:field="*{repeatPassword}" required value=""/>
+                </div>
+
+                <input type="hidden" name="redirect_to" value="http://localhost/index"/>
+
+                <button type="submit" class="btn btn-primary w-100 mt-3">Sign Up</button>
+                <p class="mt-2 text-center">Already have an account? <a href="/sign/in">Sign in here</a></p>
+            </form>
+        </div>
+    </div>
+</div>
+<footer th:replace="~{footer/footer :: footer}"></footer>
+</body>
+</html>
