@@ -1,0 +1,14 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light" th:fragment="navbar">
+    <div class="container-fluid">
+        <a class="navbar-brand" th:href="@{/index}">
+            <img th:src="@{/images/weather-app.png}" alt="" width="30" height="24">
+            Weather Tracker
+        </a>
+        <div class="d-flex align-items-center" th:if="${login}">
+            <span class="navbar-text me-3" th:text="${login}"></span>
+            <form th:action="@{/sign/out}" th:method="post" style="display:inline;">
+                <button type="submit" class="btn btn-outline-danger">Sign out</button>
+            </form>
+        </div>
+    </div>
+</nav>
