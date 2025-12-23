@@ -1,0 +1,19 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/weather
+    username: postgres
+    password: your password=)
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+  application:
+    api:
+      key: "your api key=)"
+    session:
+      id:
+        name: "WEATHER_SESSION_ID"
