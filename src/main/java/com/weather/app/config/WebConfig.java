@@ -18,6 +18,12 @@ public class WebConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(sessionTimeInterceptor)
                 .addPathPatterns("/**")
-                .excludePathPatterns("/sign/**", "/static/**");
+                .excludePathPatterns(
+                        "/sign/**",
+                        "/css/**",
+                        "/js/**",
+                        "/images/**",
+                        "/favicon.ico"
+                );
     }
 }

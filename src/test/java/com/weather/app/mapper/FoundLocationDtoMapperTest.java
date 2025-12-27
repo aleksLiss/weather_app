@@ -39,7 +39,7 @@ class FoundLocationDtoMapperTest {
     void whenJsonIsEmptyThenThenGetEmptyList() {
         String invalidJson = "{\"invalid\": \"data\"}";
         List<FoundLocationDto> result = locationMapper.getFoundLocationDtoListFromStringJson(invalidJson);
-        assertThat(result).isEmpty();
+        assertThat(result).isEqualTo(List.of());
     }
 
     @Test

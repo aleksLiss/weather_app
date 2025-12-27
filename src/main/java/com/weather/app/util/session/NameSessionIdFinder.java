@@ -8,7 +8,7 @@ public class NameSessionIdFinder {
     private NameSessionIdFinder(){}
 
     public static String getNameSessionId(Environment environment) {
-        String nameSessionId = environment.getProperty("spring.application.session.id.name");
+        String nameSessionId = environment.getProperty("application.session.id.name");
         if (null == nameSessionId) {
             throw new NameSessionIdNotFound("Name session id was not found");
         }

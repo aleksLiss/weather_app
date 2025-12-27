@@ -1,8 +1,11 @@
 spring:
+  web:
+    resources:
+      static-locations: classpath:/static/
   datasource:
     url: jdbc:postgresql://localhost:5432/weather
     username: postgres
-    password: your password=)
+    password: ))
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
@@ -11,9 +14,13 @@ spring:
     properties:
       hibernate:
         format_sql: true
-  application:
-    api:
-      key: "your api key=)"
-    session:
-      id:
-        name: "WEATHER_SESSION_ID"
+application:
+  api:
+    key: "))"
+  session:
+    id:
+      name: "WEATHER_SESSION_ID"
+logging:
+  level:
+    org.springframework.web: DEBUG
+    org.hibernate: ERROR

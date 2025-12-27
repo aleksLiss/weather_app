@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class WeatherApiConfig {
 
-    @Value("${spring.application.api.key}")
+    @Value("${application.api.key}")
     private String token;
 
     public String getToken() {
